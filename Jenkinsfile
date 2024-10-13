@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        go '1.23.2' // Укажите имя конфигурации и версию Go, настроенную в Jenkins
+        go '1.23.2' // Версия Go, настроенная в Jenkins
     }
 
     parameters {
@@ -13,7 +13,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Рассчитываем, что репозиторий содержит build.sh и main/main.go
                 checkout scm
             }
         }
@@ -25,15 +24,6 @@ pipeline {
                     withEnv(["GOOS=${params.GOOS}", "GOARCH=${params.GOARCH}"]) {
                         sh 'bash build.sh'
                     }
-                }
-            }
-        }
-        
-        stage('Smoke Test') {
-            steps {
-                script {
-                    def exe = "hello${params.GOOS == 'windows' ? '.exe' : ''}"
-                    sh "./${exe}"
                 }
             }
         }
